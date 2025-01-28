@@ -78,6 +78,19 @@ sourceSets.each {
     it.java.destinationDirectory = dir
 }
 
+tasks.register('buildRelease') {
+    dependsOn ':platform:forge:jarJar'
+    group = 'build'
+    doLast {
+        def output = rootProject.file("output/${version}")
+        copy {
+            from file("build/libs/${mod_id}-forge-${minecraft_version}-${version}-all.jar")
+            rename { it.replace('-all', '') }
+            into output
+        }
+    }
+}
+
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     dependsOn ':buildAll'
     group = 'publishing'
