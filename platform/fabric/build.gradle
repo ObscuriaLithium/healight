@@ -1,15 +1,26 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
 plugins {
-    id 'mod-platform'
+    id 'java'
+    id 'idea'
+    id 'maven-publish'
     id 'fabric-loom'
-    id "com.modrinth.minotaur" version "2.+"
+}
+
+base {
+    archivesName = "${mod_name}-fabric-${minecraft_version}"
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    implementation project(":common")
 }
 
 loom {
-    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
-    if (aw.exists()) {
-        accessWidenerPath.set(aw)
+    if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
+        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
     }
     mixin {
         defaultRefmapName.set("${mod_id}.refmap.json")
@@ -17,30 +28,30 @@ loom {
     runs {
         client {
             client()
-            setConfigName('Fabric Client')
+            setConfigName("Fabric Client")
             ideConfigGenerated(true)
-            runDir('runs/client')
+            runDir("run")
         }
         server {
             server()
-            setConfigName('Fabric Server')
+            setConfigName("Fabric Server")
             ideConfigGenerated(true)
-            runDir('runs/server')
-        }
-        data {
-            inherit client
-            setConfigName("Fabric Data")
-            ideConfigGenerated(true)
-            runDir("build/datagen")
-
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${project(":common").file("src/generated/resources")}"
-            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            runDir("run")
         }
     }
 }
 
-apply from: 'dependencies.gradle'
+tasks.withType(JavaCompile).configureEach {
+    source(project(":common").sourceSets.main.allSource)
+}
+
+tasks.withType(Javadoc).configureEach {
+    source(project(":common").sourceSets.main.allJava)
+}
+
+tasks.named("sourcesJar", Jar) {
+    from(project(":common").sourceSets.main.allSource)
+}
 
 tasks.register('buildRelease') {
     dependsOn ':platform:fabric:build'
@@ -51,43 +62,20 @@ tasks.register('buildRelease') {
     }
 }
 
-tasks.register('publishCurseForge', TaskPublishCurseForge) {
-    dependsOn ':buildAll'
-    group = 'publishing'
-    apiToken = System.getenv('curseforge_token')
-
-    def filePath = "output/${version}/${mod_id}-fabric-${minecraft_version}-${version}.jar"
-    def file = upload(curseforge_fabric_id, rootProject.file(filePath))
-    file.displayName = "${mod_name} ${version}"
-    file.releaseType = publish_release_type
-    file.changelog = rootProject.file('CHANGELOG.md').text
-    file.changelogType = 'markdown'
-    file.addGameVersion(minecraft_version)
-    file.addModLoader("fabric", "quilt")
-    file.addRequirement("fabric-api")
-    file.addOptional("modmenu")
+processResources {
+    from project(":common").sourceSets.main.resources
 }
 
-modrinth {
-    token = System.getenv("modrinth_token")
-
-    def filePath = "output/${version}/${mod_id}-fabric-${minecraft_version}-${version}.jar"
-    uploadFile = rootProject.file(filePath)
-    projectId = "fragmentum"
-    versionName = "${mod_name} ${version}"
-    versionNumber = "${version}"
-    versionType = publish_release_type
-    changelog = rootProject.file('CHANGELOG.md').text
-    gameVersions = [ minecraft_version ]
-    loaders = ["fabric", "quilt"]
-    dependencies {
-        required.project "fabric-api"
-        optional.project "modmenu"
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId base.archivesName.get()
+            from components.java
+        }
     }
-}
-
-tasks.register('publishModrinth') {
-    dependsOn ':buildAll'
-    dependsOn 'modrinth'
-    group = 'publishing'
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+    }
 }

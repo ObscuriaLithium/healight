@@ -29,9 +29,9 @@ public abstract class MixinLivingEntity extends Entity implements LivingExtensio
     }
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
-    private void defineSynchedData_modify(SynchedEntityData.Builder builder, CallbackInfo info)
+    private void defineSynchedData_modify(CallbackInfo info)
     {
-        builder.define(DATA_HEAL_TIME, 0);
+        this.entityData.define(DATA_HEAL_TIME, 0);
     }
 
     @Inject(method = "baseTick", at = @At("RETURN"))
@@ -48,7 +48,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingExtensio
         if (this.tickCount < 10) return;
         final var result = Mth.clamp(health, 0, this.getMaxHealth());
         if (result - 0.01f < this.getHealth()) return;
-        this.entityData.set(DATA_HEAL_TIME, 8);
+        this.entityData.set(DATA_HEAL_TIME, 6);
     }
 
     @Override
