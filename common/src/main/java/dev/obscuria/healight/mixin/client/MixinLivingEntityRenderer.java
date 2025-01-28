@@ -9,12 +9,9 @@ import dev.obscuria.healight.LivingExtension;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer
@@ -29,15 +26,8 @@ public abstract class MixinLivingEntityRenderer
             final var blockLight = Math.min(15, LightTexture.block(light) + 3);
             final var skyLight = Math.min(15, LightTexture.sky(light) + 3);
             light = LightTexture.pack(blockLight, skyLight);
-            color = LivingExtension.getHealTime(entity) > 0 ? 0xFF00FF00 : color;
+            color = 0xFF3FFF3F;
         }
         original.call(instance, pose, consumer, light, overlay, color);
-    }
-
-    @Inject(method = "getOverlayCoords", at = @At("RETURN"), cancellable = true)
-    private static void getOverlayCoords_modify(LivingEntity entity, float u, CallbackInfoReturnable<Integer> info)
-    {
-        if (LivingExtension.getHealTime(entity) <= 0) return;
-        info.setReturnValue(OverlayTexture.pack(OverlayTexture.u(u), OverlayTexture.v(true)));
     }
 }

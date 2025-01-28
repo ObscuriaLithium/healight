@@ -48,7 +48,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingExtensio
         if (this.tickCount < 10) return;
         final var result = Mth.clamp(health, 0, this.getMaxHealth());
         if (result - 0.01f < this.getHealth()) return;
-        this.entityData.set(DATA_HEAL_TIME, 8);
+        this.entityData.set(DATA_HEAL_TIME, 6);
     }
 
     @Override
