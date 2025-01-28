@@ -16,7 +16,5 @@ Healight is a lightweight mod that adds a green glow to entities when they heal,
 
 ### Project Pages
 
-- [Curseforge (Fabric & Quilt)](https://www.curseforge.com/minecraft/mc-mods/fragmentum-fabric)
-- [Curseforge (Forge)](https://www.curseforge.com/minecraft/mc-mods/fragmentum-fabric)
-- [Curseforge (NeoForge)](https://www.curseforge.com/minecraft/mc-mods/fragmentum-fabric)
-- [Modrinth](https://modrinth.com/mod/fragmentum)
+- [Curseforge](https://www.curseforge.com/minecraft/mc-mods/healight)
+- [Modrinth](https://modrinth.com/mod/healight)
