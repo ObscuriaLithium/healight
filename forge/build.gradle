@@ -96,8 +96,8 @@ tasks.named("sourcesJar", Jar) {
     from(project(":common").sourceSets.main.allSource)
 }
 
-tasks.register('buildRelease') {
-    dependsOn ':platform:forge:jarJar'
+tasks.register('releaseForge') {
+    dependsOn ':forge:jarJar'
     group = 'build'
     doLast {
         def output = rootProject.file("output/${version}")

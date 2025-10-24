@@ -53,8 +53,8 @@ tasks.named("sourcesJar", Jar) {
     from(project(":common").sourceSets.main.allSource)
 }
 
-tasks.register('buildRelease') {
-    dependsOn ':platform:fabric:build'
+tasks.register('releaseFabric') {
+    dependsOn ':fabric:build'
     group = 'build'
     doLast {
         def output = rootProject.file("output/${version}")

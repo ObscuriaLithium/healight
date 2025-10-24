@@ -22,5 +22,5 @@ plugins {
 
 rootProject.name = 'Healight'
 include(":common")
-include(":platform:fabric")
-include(":platform:forge")
+include(":fabric")
+include(":forge")

@@ -14,15 +14,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class MixinLivingEntityRenderer
-{
-    @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
+public abstract class MixinLivingEntityRenderer {
+
+    @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
     private void render_modify(EntityModel<?> instance, PoseStack pose, VertexConsumer consumer,
                                int light, int overlay, float r, float g, float b, float a,
-                               Operation<Void> original, @Local(argsOnly = true) LivingEntity entity)
-    {
-        if (LivingExtension.getHealTime(entity) > 0)
-        {
+                               Operation<Void> original, @Local(argsOnly = true) LivingEntity entity) {
+
+        if (LivingExtension.healTimeOf(entity) > 0) {
             final var blockLight = Math.min(15, LightTexture.block(light) + 3);
             final var skyLight = Math.min(15, LightTexture.sky(light) + 3);
             light = LightTexture.pack(blockLight, skyLight);
@@ -30,6 +31,7 @@ public abstract class MixinLivingEntityRenderer
             g = 1.0F;
             b = 0.25F;
         }
+
         original.call(instance, pose, consumer, light, overlay, r, g, b, a);
     }
 }
