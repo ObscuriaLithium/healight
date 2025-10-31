@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "healight",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/healight",
+    "sources": "https://github.com/ObscuriaLithium/healight",
+    "issues": "https://github.com/ObscuriaLithium/healight/issues"
+  },
+  "license": "${license}",
+  "icon": "${mod_id}.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.obscuria.healight.fabric.FabricHealight"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "java": ">=17"
+  }
+}
+  
