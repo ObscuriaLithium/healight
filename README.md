@@ -1,4 +1,4 @@
-# <center>Healight</center>
+# Healight
 
 <center>
     <a href="https://www.curseforge.com/minecraft/mc-mods/healight" rel="nofollow"><img alt="Fabric" src="https://img.shields.io/badge/Fabric-215b3c?style=for-the-badge"></a> 
